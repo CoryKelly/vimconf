@@ -36,11 +36,14 @@ set cmdheight=2
 " ----------------------------------------------------------------------------
 call plug#begin('~/.config/nvim/plugged')
 
+Plug 'preservim/nerdtree'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'https://github.com/joshdick/onedark.vim.git'
 Plug 'tpope/vim-fugitive'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 call plug#end()
 
@@ -50,3 +53,15 @@ call plug#end()
 "     - Colours -
 " ----------------------------------------------------------------------------
 colorscheme onedark
+
+" ----------------------------------------------------------------------------
+"     - Remapping - 
+" ----------------------------------------------------------------------------
+map <silent> <C-n> :NERDTreeFocus<CR>
+
+" Find files using Telescope command-line sugar.
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+
