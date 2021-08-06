@@ -42,9 +42,9 @@ let g:go_bin_path = $HOME."/go/bin"
 " ----------------------------------------------------------------------------
 call plug#begin('~/.config/nvim/plugged')
 
-Plug 'preservim/nerdtree'
-Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-lua/popup.nvim'
+Plug 'preservim/nerdtree'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'dracula/vim'
@@ -75,6 +75,9 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>ev <cmd>vsp $MYVIMRC<cr>
 nnoremap <leader>sv <cmd>source $MYVIMRC<cr>
 
+" Quickfix list for cNext cPrevious
+map <C-j> :cn<CR>
+map <C-k> :cp<CR>
 " ----------------------------------------------------------------------------
 "     - Custom telescope - 
 " ----------------------------------------------------------------------------
