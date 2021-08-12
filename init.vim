@@ -2,6 +2,7 @@
 "     - Default settings -
 " ----------------------------------------------------------------------------
 set nocompatible
+set conceallevel=3
 filetype plugin on
 set tabstop=4 softtabstop=4
 set shiftwidth=4
@@ -27,6 +28,7 @@ set smartindent
 set number
 filetype off
 syntax on
+set encoding=UTF-8
 
 " Ignore files
 set wildignore+=*.pyc
@@ -40,8 +42,23 @@ set wildignore+=**/.git/*
 " Give more space for diplaying messages
 set cmdheight=2
 
+" Icons for Startify
+let g:webdevicons_enable_startify = 1
+
+" Turn off brackets for NERDTree
+let g:webdevicons_conceal_nerdtree_brackets = 1
+
+if exists('g:loaded_webdevicons')
+    call webdevicons#refresh()
+endif
+
 " Quit NERDTree when opening files
 let NERDTreeQuitOnOpen=1
+let g:NERDTreeFileExtensionHighlightFullName = 1
+
+let g:NERDTreeFileExtensionHighlightFullName = 0
+let g:NERDTreeExactMatchHighlightFullName = 0
+let g:NERDTreePatternMatchHighlightFullName = 0
 
 " Show hidden files
 let NERDTreeShowHidden=1
@@ -66,9 +83,14 @@ Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
+Plug 'ryanoasis/vim-devicons'
 
 " Nerd Tree 
 Plug 'preservim/nerdtree'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+
+" Startify fancy start screen
+Plug 'mhinz/vim-startify', {'branch': 'center'}
 
 " Color Theme 
 Plug 'dracula/vim'
@@ -85,6 +107,9 @@ Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lock
 " Personal Wiki 
 Plug 'vimwiki/vimwiki'
 
+" Statusline config
+Plug 'glepnir/galaxyline.nvim' , {'branch': 'main'}
+
 call plug#end()
 
 
@@ -94,6 +119,56 @@ call plug#end()
 colorscheme dracula
 
 
+" ----------------------------------------------------------------------------
+"     - Splash Screen config -
+" ----------------------------------------------------------------------------
+let s:header= [
+\ "                          ",
+\ "                          ",
+\ "                          ",
+\ "      .            .      ",
+\ "    .,;'           :,.    ",
+\ "  .,;;;,,.         ccc;.  ",
+\ ".;c::::,,,'        ccccc: ",
+\ ".::cc::,,,,,.      cccccc.",
+\ ".cccccc;;;;;;'     llllll.",
+\ ".cccccc.,;;;;;;.   llllll.",
+\ ".cccccc  ';;;;;;'  oooooo.",
+\ "'lllllc   .;;;;;;;.oooooo'",
+\ "'lllllc     ,::::::looooo'",
+\ "'llllll      .:::::lloddd'",
+\ ".looool       .;::coooodo.",
+\ "  .cool         'ccoooc.  ",
+\ "    .co          .:o:.    ",
+\ "      .           .'      ",
+\ "                          ",
+\ "                          ",
+\ "                          ",
+\ "                          ",
+\ "                          ",
+\ "                          ",
+\]
+
+let g:startify_lists = [
+      \ { 'type': 'bookmarks', 'header': startify#center(['  Bookmarks']) },
+      \ { 'type': 'files',     'header': startify#center(['  Recent Files']) },
+      \ ]
+
+let g:startify_bookmarks = [
+      \ { 'v': '~/.config/nvim/init.vim' },
+      \ { 'z': '~/.work_projects'},
+      \ { 'c': '~/personal_projects'},
+      \ ]
+
+function! s:center(lines) abort
+  let longest_line   = max(map(copy(a:lines), 'strwidth(v:val)'))
+  let centered_lines = map(copy(a:lines),
+        \ 'repeat(" ", (&columns / 2) - (longest_line / 2)) . v:val')
+  return centered_lines
+endfunction
+
+let g:startify_center = 60
+let g:startify_custom_header = s:center(s:header)
 " ----------------------------------------------------------------------------
 "     - Remapping -
 " ----------------------------------------------------------------------------
@@ -132,11 +207,9 @@ nnoremap <leader>. :vnew <cr>
 " Telescope Import 
 lua require('telescope_setup')
 
-" Current buffer find remap
-nnoremap <C-q> <cmd> lua require('telescope.builtin').current_buffer_fuzzy_find({ sorting_strategy="ascending" }) <cr>
 " Telescope icons
 lua require'nvim-web-devicons'.get_icons()
-
+nnoremap <C-q> <cmd>lua require("telescope_setup").curr_buf() <cr>
 
 " --------------------------------------------------------------------------
 "     - coc.nvim default settings -
@@ -208,6 +281,8 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 " this is handled by LanguageClient [LC]
 let g:go_def_mapping_enabled = 0
 
+" Statusline Custom Config 
+lua require('statusline')
 
 " Simpler Solution for window changing
 let i = 1
@@ -225,3 +300,32 @@ augroup highlight_yank
     autocmd!
     autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank({timeout = 40})
 augroup END
+
+let s:brown = "905532"
+let s:aqua =  "3AFFDB"
+let s:blue = "689FB6"
+let s:darkBlue = "44788E"
+let s:purple = "834F79"
+let s:lightPurple = "834F79"
+let s:red = "AE403F"
+let s:beige = "F5C06F"
+let s:yellow = "F09F17"
+let s:orange = "D4843E"
+let s:darkOrange = "F16529"
+let s:pink = "CB6F6F"
+let s:salmon = "EE6E73"
+let s:green = "8FAA54"
+let s:lightGreen = "31B53E"
+let s:white = "FFFFFF"
+let s:rspec_red = 'FE405F'
+let s:git_orange = 'F54D27'
+
+let g:NERDTreeExtensionHighlightColor = {} " this line is needed to avoid error
+let g:NERDTreeExtensionHighlightColor['css'] = s:blue " sets the color of css files to blue
+
+let g:NERDTreeExactMatchHighlightColor = {} " this line is needed to avoid error
+let g:NERDTreeExactMatchHighlightColor['.gitignore'] = s:git_orange " sets the color for .gitignore files
+
+let g:NERDTreePatternMatchHighlightColor = {} " this line is needed to avoid error
+let g:NERDTreePatternMatchHighlightColor['.*_spec\.rb$'] = s:rspec_red " sets the color for files ending with _spec.rb
+let g:WebDevIconsDefaultFileSymbolColor = s:blue
